@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Ghost Forest Mortality — U.S. Coastal Forests</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Title / brand -->
+  <header class="brand">
+    <div class="brand-mark"></div>
+    <div class="brand-text">
+      <h1>Ghost Forest Atlas</h1>
+      <p>Coastal forest mortality &middot; 2012&ndash;2023</p>
+    </div>
+  </header>
+
+  <!-- Control panel -->
+  <aside class="panel" id="panel">
+    <button class="panel-toggle" id="panelToggle" title="Collapse panel">&#9776;</button>
+
+    <section class="panel-section">
+      <h2>Search location</h2>
+      <div class="search">
+        <input id="searchInput" type="text" placeholder="City, county, address…" autocomplete="off" spellcheck="false" />
+        <ul id="searchResults" class="search-results"></ul>
+      </div>
+    </section>
+
+    <section class="panel-section">
+      <h2>Basemap</h2>
+      <div class="segmented" id="basemapSwitch">
+        <button data-base="streets" class="active">Street</button>
+        <button data-base="satellite">Satellite</button>
+      </div>
+    </section>
+
+    <section class="panel-section">
+      <h2>Data Layers</h2>
+      <div class="layers" id="layers"><!-- injected --></div>
+    </section>
+
+    <section class="panel-section footnote">
+      <p>100&nbsp;m resolution &middot; within 10&nbsp;km of coastline.</p>
+    </section>
+  </aside>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/pmtiles@3.2.1/dist/pmtiles.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

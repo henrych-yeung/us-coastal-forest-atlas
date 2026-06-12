@@ -1,0 +1,293 @@
+:root {
+  --bg: #0d1117;
+  --panel: rgba(20, 24, 33, 0.82);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --text: #e6edf3;
+  --text-dim: #9aa7b4;
+  --accent: #ff5a4d;
+  --accent-2: #4f9dff;
+  --radius: 14px;
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+#map {
+  position: absolute;
+  inset: 0;
+  background: #0d1117;
+}
+
+/* Data tiles: nearest-neighbour upscaling so each 100 m cell stays a crisp
+   square past native zoom, instead of a blurry blob. Basemap tiles keep their
+   default smooth scaling. Targeted two ways (the tile class AND the data panes)
+   so it can't miss a layer. The data panes are pane_440/435/420/410. */
+.data-tile,
+.leaflet-pane[class*="pane_4"] img,
+.leaflet-pane[class*="pane_4"] canvas {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+/* Leaflet dark-friendly tweaks */
+.leaflet-container { background: #0d1117; }
+.leaflet-control-zoom a {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--panel-border) !important;
+  backdrop-filter: blur(12px);
+}
+.leaflet-control-attribution {
+  background: rgba(13, 17, 23, 0.6) !important;
+  color: var(--text-dim) !important;
+  backdrop-filter: blur(6px);
+}
+.leaflet-control-attribution a { color: var(--text-dim) !important; }
+
+/* Brand */
+.brand {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px 10px 12px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+.brand-mark {
+  width: 30px; height: 30px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent), #7b1d16);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
+}
+.brand-text h1 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: 0.2px;
+}
+.brand-text p {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+/* Panel */
+.panel {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 1000;
+  width: 300px;
+  max-height: calc(100vh - 36px);
+  overflow-y: auto;
+  padding: 8px 18px 18px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.panel.collapsed { transform: translateX(calc(100% + 24px)); opacity: 0; pointer-events: none; }
+
+.panel-toggle {
+  position: absolute;
+  top: 12px; right: 14px;
+  border: none; background: transparent;
+  color: var(--text-dim); font-size: 18px; cursor: pointer;
+  line-height: 1;
+}
+.panel-section { padding: 14px 0; border-bottom: 1px solid var(--panel-border); }
+.panel-section:last-child { border-bottom: none; }
+.panel-section h2 {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  color: var(--text-dim);
+}
+
+/* Segmented control */
+.segmented {
+  display: flex;
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+}
+.segmented button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.segmented button.active {
+  background: var(--accent-2);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(79,157,255,0.35);
+}
+
+/* Place search */
+.search { position: relative; }
+#searchInput {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: border 0.15s ease;
+}
+#searchInput::placeholder { color: var(--text-dim); }
+#searchInput:focus { border-color: var(--accent-2); }
+.search-results {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.search-results:empty { display: none; }
+.search-results li {
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.search-results li:hover { background: rgba(255, 255, 255, 0.07); }
+.search-results li .title { font-size: 12.5px; color: var(--text); }
+.search-results li .sub { font-size: 10.5px; color: var(--text-dim); margin-top: 1px; }
+.search-results li.empty { color: var(--text-dim); font-size: 11.5px; cursor: default; }
+.search-results li.empty:hover { background: none; }
+
+/* Layer cards */
+.layer {
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 11px;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid transparent;
+  transition: border 0.15s ease, background 0.15s ease;
+}
+.layer:last-child { margin-bottom: 0; }
+.layer.on { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); }
+
+.layer-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.layer-title { flex: 1; }
+.layer-title .name { font-size: 13.5px; font-weight: 600; }
+.layer-title .desc { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
+
+/* iOS-style switch */
+.switch { position: relative; width: 40px; height: 23px; flex: none; }
+.switch input { display: none; }
+.switch .track {
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0.15);
+  border-radius: 20px;
+  transition: background 0.2s ease;
+}
+.switch .thumb {
+  position: absolute; top: 2px; left: 2px;
+  width: 19px; height: 19px;
+  background: #fff; border-radius: 50%;
+  transition: transform 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+.switch input:checked + .track { background: var(--accent); }
+.switch input:checked + .track + .thumb { transform: translateX(17px); }
+
+/* Layer body (legend + opacity) — collapses when off */
+.layer-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease, margin 0.25s ease, opacity 0.2s ease;
+  opacity: 0;
+}
+.layer.on .layer-body { max-height: 160px; opacity: 1; margin-top: 12px; }
+
+.legend { margin-bottom: 10px; }
+.legend .bar {
+  height: 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.legend .ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+.legend .unit { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+
+.opacity-row { display: flex; align-items: center; gap: 8px; }
+.opacity-row label { font-size: 10.5px; color: var(--text-dim); width: 44px; }
+input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  flex: 1; height: 4px; border-radius: 3px;
+  background: rgba(255,255,255,0.18);
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--text); cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.footnote p { margin: 0; font-size: 10.5px; color: var(--text-dim); line-height: 1.5; }
+
+/* Floating reopen button when panel collapsed */
+.reopen {
+  position: absolute;
+  top: 18px; right: 18px;
+  z-index: 1000;
+  display: none;
+  width: 44px; height: 44px;
+  align-items: center; justify-content: center;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 18px; cursor: pointer;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+.reopen.show { display: flex; }
+
+@media (max-width: 560px) {
+  .panel { width: calc(100vw - 36px); }
+  .brand { display: none; }
+}

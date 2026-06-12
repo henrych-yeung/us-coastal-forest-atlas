@@ -1,0 +1,14 @@
+# --- Large source rasters: never upload (some exceed GitHub's 100 MB limit) ---
+*.tif
+*.tif.aux.xml
+
+# --- Intermediate tile builds: not needed for the static site ---
+*.mbtiles
+processing/_tmp/
+processing/logs/
+
+# --- macOS / Python cruft ---
+.DS_Store
+._*
+__pycache__/
+*.pyc
