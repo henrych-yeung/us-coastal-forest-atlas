@@ -132,6 +132,15 @@ LAYERS.forEach((l) => {
   if (l.on) l.layer.addTo(map);
 });
 
+// PMTiles raster tiles sometimes don't re-render after a zoom until something
+// forces a refresh (the manual fix was toggling the layer off/on). Nudge every
+// active data layer to redraw once the zoom settles so the map updates itself.
+map.on("zoomend", () => {
+  LAYERS.forEach((l) => {
+    if (map.hasLayer(l.layer)) l.layer.redraw();
+  });
+});
+
 // ---------------------------------------------------------------- basemap UI
 document.querySelectorAll("#basemapSwitch button").forEach((btn) => {
   btn.addEventListener("click", () => {
