@@ -2,14 +2,21 @@
 
 // ---------------------------------------------------------------- basemaps
 const basemaps = {
-  streets: L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {
-      maxZoom: 19,
-      attribution:
-        '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-    }
-  ),
+  // Muted grayscale basemap (base canvas + place-name/road reference labels)
+  streets: L.layerGroup([
+    L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+      {
+        maxZoom: 16,
+        maxNativeZoom: 16,
+        attribution: "Esri, HERE, Garmin, FAO, NOAA, USGS",
+      }
+    ),
+    L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+      { maxZoom: 16, maxNativeZoom: 16 }
+    ),
+  ]),
   satellite: L.tileLayer(
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     {
