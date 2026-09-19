@@ -3,11 +3,11 @@
 // ---------------------------------------------------------------- basemaps
 const basemaps = {
   streets: L.tileLayer(
-    "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
       maxZoom: 19,
       attribution:
-        '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+        '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
     }
   ),
   satellite: L.tileLayer(
